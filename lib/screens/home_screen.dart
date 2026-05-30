@@ -1,3 +1,4 @@
+import 'package:bazar_shodai/models/grocery_item.dart';
 import 'package:bazar_shodai/screens/new_item_screen.dart';
 import 'package:bazar_shodai/widgets/grocery_listing.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<GroceryItem> _groceryItems = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,15 +25,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: const GroceryListing(),
+      body: GroceryListing(groceryItems: _groceryItems),
     );
   }
 
-  void _addItem() {
-    Navigator.of(context).push(
+  void _addItem() async {
+    final newItem = await Navigator.of(context).push<GroceryItem>(
       MaterialPageRoute(
         builder: (ctx) => const NewItemScreen(),
       ),
     );
+
+    if (newItem == null) {
+      return;
+    }
+    setState(() {
+      _groceryItems.add(newItem);
+    });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:bazar_shodai/data/categories.dart';
+import 'package:bazar_shodai/models/grocery_item.dart';
 import 'package:flutter/material.dart';
 
 class NewItemScreen extends StatefulWidget {
@@ -20,7 +21,29 @@ class _NewItemScreenState extends State<NewItemScreen> {
   void _saveItem() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      Navigator.of(context).pop(
+        GroceryItem(
+          id: DateTime.now().toString(),
+          name: _enteredName,
+          quantity: _enteredQuantity,
+          category: _selectedCategory,
+        ),
+      );
     }
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(
+      SnackBar(
+        content: const Text('Item added successfully!'),
+        backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
+        duration: const Duration(
+          milliseconds: 300,
+        ),
+        showCloseIcon: true,
+      ),
+    );
   }
 
   @override
@@ -65,7 +88,6 @@ class _NewItemScreenState extends State<NewItemScreen> {
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null ||
-                            value.isEmpty ||
                             int.tryParse(value) == null ||
                             int.tryParse(value)! <= 0) {
                           return 'Must be valid, positive number.';

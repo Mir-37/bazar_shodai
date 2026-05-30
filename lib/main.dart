@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Groceries',
       theme: kThemeData,
-      home: const HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }
