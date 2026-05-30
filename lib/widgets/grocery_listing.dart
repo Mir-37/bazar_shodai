@@ -1,33 +1,28 @@
-import 'package:bazar_shodai/models/grocery_item.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:bazar_shodai/data/dummy_items.dart';
 import 'package:flutter/material.dart';
 
 class GroceryListing extends StatelessWidget {
-  const GroceryListing({super.key, required this.gItem});
-  final GroceryItem gItem;
+  const GroceryListing({super.key});
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 8.0,
-        horizontal: 16,
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              color: gItem.category.color,
-            ),
-          ),
-          const SizedBox(
-            width: 25,
-          ),
-          Text(gItem.name),
-          const Spacer(),
-          Text('${gItem.quantity}'),
-        ],
+    return ListView.builder(
+      itemCount: groceryItems.length,
+      itemBuilder: (ctx, index) => ListTile(
+        leading: Container(
+          width: 24,
+          height: 24,
+          color: groceryItems[index].category.color,
+        ),
+        title: Text(groceryItems[index].name),
+        trailing: Text(
+          groceryItems[index].quantity.toString(),
+          style:
+              Theme.of(
+                context,
+              ).textTheme.labelLarge!.copyWith(
+                color: Colors.white,
+              ),
+        ),
       ),
     );
   }
