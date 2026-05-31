@@ -1,5 +1,6 @@
 import 'package:bazar_shodai/models/grocery_item.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class GroceryListing extends StatefulWidget {
   GroceryListing({
@@ -22,7 +23,7 @@ class _GroceryListingState extends State<GroceryListing> {
   @override
   Widget build(BuildContext context) {
     if (widget.isLoading) {
-      return const Center(
+      return Center(
         child: CircularProgressIndicator(),
       );
     }
@@ -83,6 +84,13 @@ class _GroceryListingState extends State<GroceryListing> {
   }
 
   void _removeItem(GroceryItem item) {
+    final url = Uri.https(
+      'bazarshodai-952ad-default-rtdb.firebaseio.com',
+      'shopping-list/${item.id}.json',
+    );
+
+    http.delete(url);
+
     setState(() {
       widget.groceryItems.remove(item);
       ScaffoldMessenger.of(context).clearSnackBars();
