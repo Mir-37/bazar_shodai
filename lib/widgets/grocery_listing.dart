@@ -1,4 +1,3 @@
-import 'package:bazar_shodai/data/dummy_items.dart';
 import 'package:bazar_shodai/models/grocery_item.dart';
 import 'package:flutter/material.dart';
 
