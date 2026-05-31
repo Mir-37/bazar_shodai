@@ -21,9 +21,15 @@ class _NewItemScreenState extends State<NewItemScreen> {
   var _enteredQuantity = 1;
   var _selectedCategory = categories.entries.first.value;
 
+  var _isSending = false;
+
   void _saveItem() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
+      setState(() {
+        _isSending = true;
+      });
 
       final url = Uri.https(
         'bazarshodai-952ad-default-rtdb.firebaseio.com',
@@ -166,16 +172,18 @@ class _NewItemScreenState extends State<NewItemScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () {
-                      _formKey.currentState!.reset();
-                    },
+                    onPressed: _isSending
+                        ? null
+                        : () {
+                            _formKey.currentState!.reset();
+                          },
                     child: const Text('Reset'),
                   ),
                   const SizedBox(
                     width: 15,
                   ),
                   ElevatedButton(
-                    onPressed: _saveItem,
+                    onPressed: _isSending ? null : _saveItem,
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.only(
                         left: 30,
@@ -185,7 +193,23 @@ class _NewItemScreenState extends State<NewItemScreen> {
                       ),
                       elevation: 10,
                     ),
-                    child: const Text('Save'),
+                    child: _isSending
+                        ? SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                left: 30,
+                                right: 30,
+                                top: 10,
+                                bottom: 10,
+                              ),
+                              child: CircularProgressIndicator(
+                                color: Theme.of(context).primaryColorLight,
+                              ),
+                            ),
+                          )
+                        : const Text('Save'),
                   ),
                 ],
               ),

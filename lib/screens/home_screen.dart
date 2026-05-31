@@ -16,6 +16,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<GroceryItem> _groceryItems = [];
+  var _isLoading = true;
+  String? _error;
 
   @override
   void initState() {
@@ -35,7 +37,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: GroceryListing(groceryItems: _groceryItems),
+      body: GroceryListing(
+        groceryItems: _groceryItems,
+        isLoading: _isLoading,
+        errorMessage: _error,
+      ),
     );
   }
 
@@ -48,6 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final response = await http.get(
       url,
     );
+
+    setState(() {
+      if (response.statusCode >= 400) {
+        _error = 'Failed to fetch data, please try again later';
+      }
+    });
 
     final Map<String, dynamic> listData = json.decode(
       response.body,
@@ -69,6 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       setState(() {
         _groceryItems = loadedItems;
+        _isLoading = false;
       });
     }
   }

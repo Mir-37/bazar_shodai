@@ -2,9 +2,17 @@ import 'package:bazar_shodai/models/grocery_item.dart';
 import 'package:flutter/material.dart';
 
 class GroceryListing extends StatefulWidget {
-  const GroceryListing({super.key, required this.groceryItems});
+  GroceryListing({
+    super.key,
+    required this.groceryItems,
+    required this.isLoading,
+    this.errorMessage,
+  });
 
   final List<GroceryItem> groceryItems;
+
+  final bool isLoading;
+  String? errorMessage;
 
   @override
   State<GroceryListing> createState() => _GroceryListingState();
@@ -13,6 +21,20 @@ class GroceryListing extends StatefulWidget {
 class _GroceryListingState extends State<GroceryListing> {
   @override
   Widget build(BuildContext context) {
+    if (widget.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    if (widget.errorMessage != null) {
+      return Center(
+        child: Text(
+          widget.errorMessage!,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+      );
+    }
+
     final content = widget.groceryItems.isEmpty
         ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
