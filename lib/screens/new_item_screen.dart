@@ -39,7 +39,7 @@ class _NewItemScreenState extends State<NewItemScreen> {
         content: const Text('Item added successfully!'),
         backgroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
         duration: const Duration(
-          milliseconds: 300,
+          milliseconds: 1200,
         ),
         showCloseIcon: true,
       ),

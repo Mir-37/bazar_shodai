@@ -1,14 +1,20 @@
+import 'package:bazar_shodai/data/dummy_items.dart';
 import 'package:bazar_shodai/models/grocery_item.dart';
 import 'package:flutter/material.dart';
 
-class GroceryListing extends StatelessWidget {
+class GroceryListing extends StatefulWidget {
   const GroceryListing({super.key, required this.groceryItems});
 
   final List<GroceryItem> groceryItems;
 
   @override
+  State<GroceryListing> createState() => _GroceryListingState();
+}
+
+class _GroceryListingState extends State<GroceryListing> {
+  @override
   Widget build(BuildContext context) {
-    final content = groceryItems.isEmpty
+    final content = widget.groceryItems.isEmpty
         ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -27,25 +33,54 @@ class GroceryListing extends StatelessWidget {
             ],
           )
         : ListView.builder(
-            itemCount: groceryItems.length,
-            itemBuilder: (ctx, index) => ListTile(
-              leading: Container(
-                width: 24,
-                height: 24,
-                color: groceryItems[index].category.color,
-              ),
-              title: Text(groceryItems[index].name),
-              trailing: Text(
-                groceryItems[index].quantity.toString(),
-                style:
-                    Theme.of(
-                      context,
-                    ).textTheme.labelLarge!.copyWith(
-                      color: Colors.white,
-                    ),
+            itemCount: widget.groceryItems.length,
+            itemBuilder: (ctx, index) => Dismissible(
+              key: ValueKey(widget.groceryItems[index].id),
+              onDismissed: (direction) {
+                _removeItem(widget.groceryItems[index]);
+              },
+              child: ListTile(
+                leading: Container(
+                  width: 24,
+                  height: 24,
+                  color: widget.groceryItems[index].category.color,
+                ),
+                title: Text(widget.groceryItems[index].name),
+                trailing: Text(
+                  widget.groceryItems[index].quantity.toString(),
+                  style:
+                      Theme.of(
+                        context,
+                      ).textTheme.labelLarge!.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
               ),
             ),
           );
     return content;
+  }
+
+  void _removeItem(GroceryItem item) {
+    setState(() {
+      widget.groceryItems.remove(item);
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'Item removed!',
+          ),
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.onTertiaryContainer,
+          duration: const Duration(
+            milliseconds: 1200,
+          ),
+          showCloseIcon: true,
+        ),
+      );
+    });
   }
 }
